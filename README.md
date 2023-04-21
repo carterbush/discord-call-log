@@ -1,10 +1,14 @@
-# discord-call-log
+# Discord Call Log
 
-Parses the data package provided by Discord to get a record of calls between two people
+Parses the data package provided by Discord to get a record of calls between two people.
 
-I needed a log of the calls made between myself and someone else for an official document. Unfortunately Discord's data package doesn't provide that out of the box, and scrolling through message history looking for "ABC started a call for XYZ hours" sounded like a nightmare, so I made this.
+In 2020, I needed a log of the calls made between myself and someone else for an official document. Unfortunately Discord's data package doesn't provide that out of the box, and scrolling through message history looking for "ABC started a call for XYZ hours" sounded like a nightmare, so I made this.
 
-Hopefully it comes in handy if anyone else is trying to do the same thing in the future.
+Since then, I've had a handful of people contact me because they also need to do something similar and in 2023 I decided to rework my original script to get a nice UI to make it easier for people to use. I hope it comes in handy.
+
+## Screenshot
+
+![](screenshot.jpg)
 
 ## Development
 

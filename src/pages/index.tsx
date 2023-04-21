@@ -45,12 +45,15 @@ export default function Home() {
           </div>
           <Typography component="p" sx={{ mt: 2 }}>
             This is a webapp to help people get a list of calls between two
-            people from a Discord package (probably for a visa!).
+            people from a Discord package. I can't guarantee complete
+            correctness, and if you have situations where you've had group calls
+            that might show up weirdly, but it was enough for my partner and I
+            to get our visa!
           </Typography>
-          <Typography component="p" gutterBottom={true}>
-            This app doesn't do anything shady with your data, and doesn't
-            communicate with a server - it's just here to help you out. The code
-            for this app is publicly available on my GitHub, linked above.
+          <Typography component="p">
+            This app doesn't communicate with a server, so your data is safely
+            in your own browser - this app is just here to help you out. The
+            code for this app is publicly available on my GitHub, linked above.
           </Typography>
           <Typography>
             If this tool helped you out and you're feeling generous, you can
