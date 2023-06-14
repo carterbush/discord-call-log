@@ -163,7 +163,11 @@ const Parser: React.FC = () => {
           <AccordionDetails>
             <List>
               {relationships
-                .sort((a, b) => (a.user.username < b.user.username ? -1 : 1))
+                .sort((a, b) =>
+                  a.user.username.toLowerCase() < b.user.username.toLowerCase()
+                    ? -1
+                    : 1
+                )
                 .map((r, i) => (
                   <ListItem key={`relationship-${i}`}>
                     <ListItemButton
