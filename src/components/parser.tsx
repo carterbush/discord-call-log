@@ -25,6 +25,7 @@ type Relationship = {
   user: {
     id: string;
     username: string;
+    display_name: string;
     discriminator: string;
   };
 };
@@ -185,8 +186,12 @@ const Parser: React.FC = () => {
                       </ListItemIcon>
                       <ListItemText
                         id={r.id}
-                        primary={`${r.user.username}#${r.user.discriminator} ${
-                          r.nickname ? `(${r.nickname})` : ""
+                        primary={`${r.user.username}${
+                          r.user.discriminator !== "0000"
+                            ? `#${r.user.discriminator}`
+                            : ""
+                        } ${r.nickname ? `(${r.nickname})` : ""} ${
+                          r.user.display_name ? `(${r.user.display_name})` : ""
                         }`}
                       />
                     </ListItemButton>
