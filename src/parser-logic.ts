@@ -1,4 +1,4 @@
-const START_CALL_TYPES = ["join_call", "start_call"];
+const START_CALL_TYPES = ["join_call", "start_call", "join_voice_channel"];
 const END_CALL_TYPES = [
   "leave_voice_channel",
   "voice_disconnect",
