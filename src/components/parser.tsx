@@ -70,8 +70,10 @@ const Parser: React.FC = () => {
       }
 
       setTheirUserIds(newChecked);
+      setSharedChannelIds([]);
+      setCallResults(null);
     },
-    [theirUserIds, setTheirUserIds]
+    [theirUserIds, setTheirUserIds, setSharedChannelIds, setCallResults]
   );
 
   const processChannels = React.useCallback(async () => {
