@@ -239,7 +239,7 @@ const Parser: React.FC = () => {
               ? "Working..."
               : "Begin processing call logs"}
           </Button>
-          {callResults === null && (
+          {isProcessingAnalytics && (
             <Alert severity="info">This can take some time</Alert>
           )}
         </>
