@@ -29,7 +29,7 @@ export const processAnalytics = async (
       }
 
       const event = JSON.parse(trimmedLine);
-      if (event["domain"] !== "Analytics") {
+      if (event["domain"] != "Reporting") {
         continue;
       }
 
