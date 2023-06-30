@@ -15,6 +15,7 @@ import {
   ListItemText,
   Typography,
   Paper,
+  Link,
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 import { CallResult, processAnalytics } from "@/parser-logic";
@@ -37,7 +38,9 @@ const Parser: React.FC = () => {
   const [theirUserIds, setTheirUserIds] = React.useState<string[]>([]);
   React.useState<boolean>(false);
   const [sharedChannelIds, setSharedChannelIds] = React.useState<string[]>([]);
-  const [callResults, setCallResults] = React.useState<CallResult[]>([]);
+  const [callResults, setCallResults] = React.useState<CallResult[] | null>(
+    null
+  );
   const [isProcessingAnalytics, setIsProcessingAnalytics] =
     React.useState<boolean>(false);
 
@@ -93,6 +96,7 @@ const Parser: React.FC = () => {
 
   const onProcessAnalytics = async () => {
     setIsProcessingAnalytics(true);
+    setCallResults(null);
     const results = await processAnalytics(uploadedFiles, sharedChannelIds);
     setCallResults(results);
     setIsProcessingAnalytics(false);
@@ -101,7 +105,7 @@ const Parser: React.FC = () => {
   const downloadResults = React.useCallback(async () => {
     const fileContents = [
       "starttime,endtime,duration",
-      ...callResults.map((cr) =>
+      ...(callResults || []).map((cr) =>
         [cr.callStart, cr.callEnd, cr.duration].join(",")
       ),
     ].join("\n");
@@ -233,24 +237,36 @@ const Parser: React.FC = () => {
               ? "Working..."
               : "Begin processing call logs"}
           </Button>
-          {callResults.length === 0 && (
+          {callResults === null && (
             <Alert severity="info">This can take some time</Alert>
           )}
         </>
       )}
-      {callResults.length !== 0 && (
+      {callResults && callResults.length !== 0 && (
         <Alert severity="success">Found {callResults.length} calls</Alert>
+      )}
+      {callResults && callResults.length === 0 && (
+        <Alert severity="error">
+          Found {callResults.length} calls. If this was unexpected, report it{" "}
+          <Link
+            href="https://github.com/carterbush/discord-call-log/issues"
+            target="_blank"
+            rel="noopener"
+          >
+            here
+          </Link>
+        </Alert>
       )}
       <Divider sx={{ mt: 2 }} />
       <Typography component="h2" variant="h5" sx={{ mt: 2, mb: 2 }}>
         Step Five: Your calls are shown here (times are in UTC time)
       </Typography>
-      {callResults.length !== 0 && (
+      {callResults && callResults.length !== 0 && (
         <Button variant="contained" onClick={downloadResults} sx={{ mb: 2 }}>
           Download call log as CSV
         </Button>
       )}
-      {callResults.length !== 0 && (
+      {callResults && callResults.length !== 0 && (
         <Paper>
           <List>
             {callResults.map((cr, i) => (
