@@ -15,11 +15,13 @@ export const processAnalytics = async (
   uploadedFiles: File[],
   sharedChannelIds: string[]
 ) => {
+  console.log("INFO: Begin processing analytics");
   // --- READ EVENT FILES AND EXTRACT RELEVANT EVENTS TO CHANNELS
   const analyticsEvents: any[] = [];
   for (const eventFile of uploadedFiles.filter((f) =>
     f.name.startsWith("events")
   )) {
+    console.log("Reading file: " + eventFile.name);
     const eventFileContent = await eventFile.text();
     const lines = eventFileContent.split("\n");
     for (const line of lines) {
@@ -42,6 +44,8 @@ export const processAnalytics = async (
     }
   }
 
+  console.log("Found " + analyticsEvents.length + " events in shared channels");
+
   // --- FILTER OUT ONLY VOICE-CALL EVENTS
   const callEvents = analyticsEvents
     .filter((e) => {
@@ -52,6 +56,8 @@ export const processAnalytics = async (
       );
     })
     .sort((a, b) => (a["timestamp"] < b["timestamp"] ? -1 : 0));
+
+  console.log("Of those, " + callEvents.length + " were related to calls");
 
   // --- MATCH START-CALL AND END-CALL EVENTS
   const matchedCallEvents = callEvents.reduce<{
@@ -102,5 +108,9 @@ export const processAnalytics = async (
   });
 
   // --- Remove calls with no duration
-  return callResults.filter((cr) => cr.duration !== "");
+  const results = callResults.filter((cr) => cr.duration !== "");
+
+  console.log("Found " + results.length + " calls");
+  console.log("INFO: Finished processing");
+  return results;
 };
