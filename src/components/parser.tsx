@@ -82,7 +82,7 @@ const Parser: React.FC = () => {
       if (
         recipients &&
         recipients.indexOf(myUserId) >= 0 &&
-        recipients.filter((r) => theirUserIds.includes(r))
+        recipients.filter((r) => theirUserIds.includes(r)).length > 0
       ) {
         sharedChannelIds.push(channelFileContents["id"]);
       }
