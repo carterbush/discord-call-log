@@ -52,10 +52,6 @@ export const processAnalytics = async (
       }
 
       const event = JSON.parse(trimmedLine);
-      if (event["domain"] != "Reporting") {
-        continue;
-      }
-
       if (
         sharedChannelIds.includes(event["channel"]) ||
         sharedChannelIds.includes(event["channel_id"])
