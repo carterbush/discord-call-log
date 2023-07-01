@@ -18,7 +18,7 @@ import {
   Link,
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import { CallResult, processAnalytics } from "@/parser-logic";
+import { CallResult, DebugLog, processAnalytics } from "@/parser-logic";
 
 type Relationship = {
   id: string;
@@ -37,10 +37,14 @@ const Parser: React.FC = () => {
   const [relationships, setRelationships] = React.useState<Relationship[]>([]);
   const [theirUserIds, setTheirUserIds] = React.useState<string[]>([]);
   React.useState<boolean>(false);
-  const [sharedChannelIds, setSharedChannelIds] = React.useState<string[]>([]);
+  const [sharedChannelIds, setSharedChannelIds] = React.useState<
+    string[] | null
+  >(null);
   const [callResults, setCallResults] = React.useState<CallResult[] | null>(
     null
   );
+  const [callResultsDebugLog, setCallResultsDebugLog] =
+    React.useState<DebugLog | null>(null);
   const [isProcessingAnalytics, setIsProcessingAnalytics] =
     React.useState<boolean>(false);
 
@@ -70,7 +74,7 @@ const Parser: React.FC = () => {
       }
 
       setTheirUserIds(newChecked);
-      setSharedChannelIds([]);
+      setSharedChannelIds(null);
       setCallResults(null);
     },
     [theirUserIds, setTheirUserIds, setSharedChannelIds, setCallResults]
@@ -99,8 +103,13 @@ const Parser: React.FC = () => {
   const onProcessAnalytics = async () => {
     setIsProcessingAnalytics(true);
     setCallResults(null);
-    const results = await processAnalytics(uploadedFiles, sharedChannelIds);
+    setCallResultsDebugLog(null);
+    const [results, debugLog] = await processAnalytics(
+      uploadedFiles,
+      sharedChannelIds || []
+    );
     setCallResults(results);
+    setCallResultsDebugLog(debugLog);
     setIsProcessingAnalytics(false);
   };
 
@@ -216,7 +225,7 @@ const Parser: React.FC = () => {
           Begin processing channels
         </Button>
       )}
-      {sharedChannelIds.length !== 0 && (
+      {sharedChannelIds !== null && sharedChannelIds.length !== 0 && (
         <Alert severity="success">
           Found {sharedChannelIds.length} channel(s) where you and at least one
           of your selected users are participants, out of a total of{" "}
@@ -228,7 +237,7 @@ const Parser: React.FC = () => {
       <Typography component="h2" variant="h5" sx={{ mt: 2, mb: 2 }}>
         Step Four: Press button to search the shared channels for call logs
       </Typography>
-      {sharedChannelIds.length !== 0 && (
+      {sharedChannelIds !== null && sharedChannelIds.length !== 0 && (
         <>
           <Button
             variant="contained"
@@ -249,14 +258,40 @@ const Parser: React.FC = () => {
       )}
       {callResults && callResults.length === 0 && (
         <Alert severity="error">
-          Found {callResults.length} calls. If this was unexpected, report it{" "}
-          <Link
-            href="https://github.com/carterbush/discord-call-log/issues"
-            target="_blank"
-            rel="noopener"
-          >
-            here
-          </Link>
+          <>
+            Found {callResults.length} calls.
+            <br />
+            {(callResultsDebugLog?.eventFiles?.length === 0 ||
+              callResultsDebugLog?.nEventsInSharedChannels === 0) && (
+              <>
+                <br />
+                Note: If you have not enabled [Use data to improve Discord] you
+                may not see any results. You can try using the other
+                person&apos;s Discord package if they have it enabled
+                <br />
+              </>
+            )}
+            <br />
+            If this was unexpected, report it{" "}
+            <Link
+              href="https://github.com/carterbush/discord-call-log/issues"
+              target="_blank"
+              rel="noopener"
+            >
+              here
+            </Link>
+            {callResultsDebugLog && (
+              <>
+                {" "}
+                and include this log to help me find the problem:
+                <Paper>
+                  <div style={{ overflowWrap: "anywhere" }}>
+                    {JSON.stringify(callResultsDebugLog)}
+                  </div>
+                </Paper>
+              </>
+            )}
+          </>
         </Alert>
       )}
       <Divider sx={{ mt: 2 }} />
