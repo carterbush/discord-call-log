@@ -140,8 +140,8 @@ const Parser: React.FC = () => {
         <DropzoneArea
           acceptedFiles={[".json", ".csv"]}
           dropzoneText={"Drag your Discord package folder here."}
-          filesLimit={10000}
-          maxFileSize={500 * 1000 * 1000}
+          filesLimit={1000000}
+          maxFileSize={500 * 1000 * 100000}
           fileObjects={uploadedFiles}
           onChange={handleFileUpload}
           showPreviewsInDropzone={false}
